@@ -63,7 +63,7 @@
     border-radius: 5px;
     border: 1px solid #ccc;
   }
-  #main-a{
+  .main-a{
      text-align: center;
   }
   .btn {
@@ -79,6 +79,7 @@
   
   .btn:hover {
     background: #444;
+    cursor: pointer;
   }
   
   .bg-dark {

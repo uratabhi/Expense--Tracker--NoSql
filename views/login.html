@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Expense App</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <h1>Login</h1>
+    </header>
+    <section class="container">
+      <form id="my-form" action="/user/login" method="POST">
+        <h1>Hello Friend!</h1>
+        <div>
+          <label for="email">Enter Your Email:</label>
+          <input type="email" id="email" name="loginEmail" / required>
+        </div>
+        <div>
+          <label for="password">Enter Your Password:</label>
+          <input type="password" id="password" name="loginPass" / required>
+        </div>
+        <button class="btn" type="submit">login</button>
+        <div class="main-a">
+          <a href="#">Forgot Your Password?</a>
+        </div>
+      </form>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

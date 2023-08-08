@@ -2,11 +2,15 @@ const path = require('path');
 const User = require('../models/userModel');
 const Sequelize = require('sequelize');
 
-exports.getLoginPage = (req, res, next) => {
-  res.sendFile(path.join(__dirname, "../", "views", "index.html"));
+exports.getSignUPPage = (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views", "signup.html"));
 };
 
-exports.signupData = (req, res, next)=>{
+exports.getLoginPage = (req, res, next)=>{
+    res.sendFile(path.join(__dirname, "../", "views", "login.html"));
+}
+
+exports.postUserSignUP = (req, res, next)=>{
      const Name = req.body.userName;
      const Email = req.body.userEmail;
      const Password = req.body.userPass;
@@ -31,3 +35,32 @@ exports.signupData = (req, res, next)=>{
           }
      })
 }
+
+exports.postUserLogin = (req, res, next) => {
+    const Email = req.body.loginEmail;
+    const Password = req.body.loginPass;
+  
+    User.findOne({ where: { Email: Email } }).then((user) => {
+      if (user) {
+        if (user.Password == Password) {
+          res
+            .status(200)
+            .send(
+              `<script>alert('Login Successful!'); window.location.href='/'</script>`
+            );
+        } else {
+          res
+            .status(401)
+            .send(
+              `<script>alert('Password Incorrect!'); window.location.href='/'</script>`
+            );
+        }
+      } else {
+        res
+          .status(404)
+          .send(
+            `<script>alert("User doesn't Exists!"); window.location.href='/'</script>`
+          );
+      }
+    });
+  };

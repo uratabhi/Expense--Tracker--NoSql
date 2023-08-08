@@ -3,10 +3,12 @@ const router = express.Router();
 const userController = require('../controllers/userControl');
 
 router.use(express.static("public"));
+router.get('/login', userController.getLoginPage);
+router.get('/', userController.getSignUPPage);
 
-router.get('/', userController.getLoginPage);
+router.post('/signup', userController.postUserSignUP);
 
-router.post('/signup', userController.signupData);
+router.post('/login', userController.postUserLogin);
 
 
 module.exports = router;
