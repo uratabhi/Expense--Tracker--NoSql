@@ -15,10 +15,8 @@
     <section class="container">
       <form id="my-form"
       action="/user/signup"
-      method="POST"
-      >   
+      method="POST">   
         <h1>Hello Friend!</h1>
-        <div class="msg"></div>
         <div>
           <label for="name">Enter Your Name:</label>
           <input type="text" id="name"  name="userName" required/>
@@ -36,6 +34,7 @@
             <a href="#">Existing User-Login</a>
          </div>
       </form>
+      <span id="error"></span>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script src="/js/main.js"></script>

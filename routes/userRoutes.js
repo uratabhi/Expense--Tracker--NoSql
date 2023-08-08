@@ -6,9 +6,7 @@ router.use(express.static("public"));
 
 router.get('/', userController.getLoginPage);
 
-router.post('/signup', (req, res, next)=>{
-    res.redirect('/');
-})
+router.post('/signup', userController.signupData);
 
 
 module.exports = router;
