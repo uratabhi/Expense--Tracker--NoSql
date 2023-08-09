@@ -2,11 +2,9 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userControl');
 
-router.use(express.static("public"));
-router.get('/login', userController.getLoginPage);
-router.get('/', userController.getSignUPPage);
+router.get('/', userController.getLoginPage);
 
-router.post('/signup', userController.postUserSignUP);
+router.post('/signUp', userController.postUserSignUP);
 
 router.post('/login', userController.postUserLogin);
 

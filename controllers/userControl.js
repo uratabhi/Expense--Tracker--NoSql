@@ -2,9 +2,6 @@ const path = require('path');
 const User = require('../models/userModel');
 const Sequelize = require('sequelize');
 
-exports.getSignUPPage = (req, res, next) => {
-  res.sendFile(path.join(__dirname, "../", "views", "signup.html"));
-};
 
 exports.getLoginPage = (req, res, next)=>{
     res.sendFile(path.join(__dirname, "../", "views", "login.html"));

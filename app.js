@@ -7,8 +7,10 @@ const userRouter = require('./routes/userRoutes');
 const sequelize = require('./utils/database');
 
 
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 app.use("/", userRouter);
 app.use('/user', userRouter);
