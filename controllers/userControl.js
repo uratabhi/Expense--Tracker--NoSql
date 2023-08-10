@@ -2,7 +2,14 @@ const path = require('path');
 const User = require('../models/userModel');
 const Sequelize = require('sequelize');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
+
+
+function generateAccessToken(id, Email){
+  return jwt.sign({userId : id, Email : Email},
+    "somesecretkey");
+}
 
 const getLoginPage = async (req, res, next)=>{
      try {
@@ -61,6 +68,7 @@ const postUserLogin = async (req, res, next) => {
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
+              token : generateAccessToken(user.id, user.email),
             });
           } else {
             return res.status(401).json({

@@ -19,6 +19,7 @@ const addExpense = async (req, res, next) => {
       description: description,
       amount: amount,
       category: category,
+      userId : req.user.id,
     });
     res.redirect("/expense");
   } catch (error) {
@@ -28,7 +29,7 @@ const addExpense = async (req, res, next) => {
 
 const getAllExpenses = async (req, res, next) => {
   try {
-    const expenses = await Expense.findAll();
+    const expenses = await Expense.findAll({where : {userId : req.user.id}});
     res.json(expenses);
   } catch (err) {
     console.log(err);
@@ -38,7 +39,8 @@ const getAllExpenses = async (req, res, next) => {
 const deleteExpense = async (req, res, next) => {
   const id = req.params.id;
   try {
-    const expense = await Expense.findByPk(id);
+    console.log(id, req.user.id);
+    const expense = await Expense.findByPk({where : {id : id, userId : req.user.id}});
     await expense.destroy();
     console.log("expense Deleted");
     res.redirect("/expense");
@@ -47,22 +49,18 @@ const deleteExpense = async (req, res, next) => {
   }
 };
 
-const editExpense = (req, res, next) => {
+const editExpense = async (req, res, next) => {
   const id = req.params.id;
   const category = req.body.category;
   const description = req.body.description;
   const amount = req.body.amount;
-  Expense.findByPk(id)
-    .then((expense) => {
-      expense.category = category;
-      expense.description = description;
-      expense.amount = amount;
-      return expense.save();
-    })
-    .then((result) => {
-      res.redirect("/");
-    })
-    .catch((err) => console.log(err));
+  const result = await Expense.update({
+     category : category,
+     description : description,
+     amount : amount
+  }, {where :{id : id, userId : req.user.id}})
+  res.redirect('/expense');
+  
 };
 
 module.exports = {
