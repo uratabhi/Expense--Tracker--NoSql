@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/user.css" />
     <title>Login | Sign Up</title>
   </head>
   <body>
@@ -20,11 +20,11 @@
         </form>
       </div>
       <div class="form-container sign-in-container">
-        <form action="/user/login" method="POST">
+        <form onsubmit="return false;">
           <h1>Login</h1>
           <span>use your previous credentials</span>
-          <input  type="email"  placeholder="Email"  name="loginEmail"  id="email" required />
-          <input  type="password"  placeholder="Password"  name="loginPass"  id="password"  required  />
+          <input  type="email"  placeholder="Email"  name="loginEmail"  id="loginemail" required />
+          <input  type="password"  placeholder="Password"  name="loginPass"  id="loginpassword"  required  />
           <a href="/password/forgotPasswordPage">Forgot your password?</a>
           <button id="loginBtn">Login</button>
         </form>
@@ -47,6 +47,6 @@
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-    <script src="/js/main.js"></script>
+    <script src="/js/user.js"></script>
   </body>
 </html>
