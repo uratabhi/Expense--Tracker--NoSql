@@ -6,10 +6,18 @@ const jwt = require('jsonwebtoken');
 
 
 
-function generateAccessToken(id, Email){
+const generateAccessToken =(id, Email)=>{
   return jwt.sign({userId : id, Email : Email},
     "somesecretkey");
 }
+
+
+const isPremiumUser = (req, res, next) => {
+    if(req.user.isPremiumUser){
+      return res.json({isPremiumUser: true});
+    }
+}
+
 
 const getLoginPage = async (req, res, next)=>{
      try {
@@ -89,4 +97,4 @@ const postUserLogin = async (req, res, next) => {
   }
 };
 
-module.exports = {getLoginPage, postUserLogin, postUserSignUP};
+module.exports = {getLoginPage, postUserLogin, postUserSignUP, isPremiumUser, generateAccessToken};

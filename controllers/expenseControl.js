@@ -19,7 +19,7 @@ const addExpense = async (req, res, next) => {
       description: description,
       amount: amount,
       category: category,
-      userId : req.user.id,
+      userId: req.user.id,
     });
     res.redirect("/expense");
   } catch (error) {
@@ -29,7 +29,7 @@ const addExpense = async (req, res, next) => {
 
 const getAllExpenses = async (req, res, next) => {
   try {
-    const expenses = await Expense.findAll({where : {userId : req.user.id}});
+    const expenses = await Expense.findAll({ where: { userId: req.user.id } });
     res.json(expenses);
   } catch (err) {
     console.log(err);
@@ -40,7 +40,9 @@ const deleteExpense = async (req, res, next) => {
   const id = req.params.id;
   try {
     console.log(id, req.user.id);
-    const expense = await Expense.findByPk({where : {id : id, userId : req.user.id}});
+    const expense = await Expense.findOne({
+      where: { id: id, userId: req.user.id },
+    });
     await expense.destroy();
     console.log("expense Deleted");
     res.redirect("/expense");
@@ -54,13 +56,21 @@ const editExpense = async (req, res, next) => {
   const category = req.body.category;
   const description = req.body.description;
   const amount = req.body.amount;
-  const result = await Expense.update({
-     category : category,
-     description : description,
-     amount : amount
-  }, {where :{id : id, userId : req.user.id}})
-  res.redirect('/expense');
-  
+  console.log(id, category, description, amount);
+  await Expense.update(
+    {  
+      category,
+      description,
+      amount,
+    },
+    {
+      where: {
+        id : id,
+        userId: req.user.id,
+      },
+    }
+  );
+  res.redirect("/expense");
 };
 
 module.exports = {

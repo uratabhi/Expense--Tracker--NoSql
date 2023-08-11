@@ -13,9 +13,7 @@
     </header>
 
     <section class="container">
-      <form id="my-form"
-       onsubmit="return false;"
-      >
+      <form id="my-form">
         <h1>Check Details...</h1>
         <div class="msg"></div>
         <div>
@@ -51,7 +49,10 @@
         <br />
         <button type="submit"  class="btn">Add Expense</button>
       </form>
-
+      <br>
+       <button id="rzpy-btn">Buy Premium</button>
+       <hr>
+        <br>
       <ul id="users"></ul>
 
       <!-- <ul class="items">
@@ -60,6 +61,8 @@
         <li class="item">Item 3</li>
       </ul> -->
     </section>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script src="/js/expense.js"></script>
   </body>

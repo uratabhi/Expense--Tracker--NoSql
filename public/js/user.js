@@ -25,12 +25,17 @@ async function login(e) {
     const res = await axios.post(
       "http://localhost:3000/user/login",
       loginDetails
-    );
-	alert(res.data.message);
+    )
+	  alert(res.data.message);
     localStorage.setItem("token", res.data.token);
     window.location.href = "/expense";
   } catch (error) {
-	 console.log(JSON.stringify(error));
-
+      if(error.response){
+        const errorMessage = error.response.data.message;
+        alert(errorMessage);
+      }
+      else{
+        alert('Please try again later');
+      }
   }
 }

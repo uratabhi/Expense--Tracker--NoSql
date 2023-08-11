@@ -8,7 +8,6 @@ const authenticate = (req, res, next) => {
       token,
       "somesecretkey"
     );
-    console.log('user_id_is>>>', user.userId);
     User.findByPk(user.userId).then((user) => {
       req.user = user;
       next();
