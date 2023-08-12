@@ -81,7 +81,7 @@ async function showLeaderBoard(e){
     const childNode = document.createElement('li');
     let del = document.createElement('button');
     let edit = document.createElement('button');
-    var textToBePut = `Name - ${data.name} Total Expense - ${data.total_cost}`;
+    var textToBePut = `Name - ${data.Name} Total Expense - ${data.totalExpenses}`;
      childNode.appendChild(document.createTextNode(textToBePut));
      childNode.appendChild(edit);
      childNode.appendChild(del);

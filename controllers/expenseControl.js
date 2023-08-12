@@ -1,6 +1,7 @@
 const path = require("path");
 
 const Expense = require("../models/expenseModel");
+const User = require("../models/userModel");
 
 const getMainPage = async (req, res, next) => {
   try {
@@ -21,6 +22,10 @@ const addExpense = async (req, res, next) => {
       category: category,
       userId: req.user.id,
     });
+    await User.update({
+      totalExpenses: Number(req.user.totalExpenses) + Number(amount),
+
+    },{where :{id : req.user.id}})
     res.redirect("/expense");
   } catch (error) {
     console.log(error);
