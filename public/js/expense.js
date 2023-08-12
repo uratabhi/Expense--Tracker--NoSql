@@ -49,6 +49,7 @@ async function premiumMemberShip(e){
         alert(
           "Welcome to our Premium Membership, You have now Excess to Reports and LeaderBoard"
         );
+        window.location.reload();
         localStorage.setItem("token", res.data.token);
       },
     };
@@ -65,8 +66,28 @@ async function isPremiumUser() {
   if (res.data.isPremiumUser) {
     rzpybtn.innerHTML = "Premium Member &#128081";
   }
+  const parentNode = document.querySelector('#leader');
+  const childNode = document.createElement('button');
+  childNode.appendChild(document.createTextNode('LearderBoard'));
+  parentNode.appendChild(childNode);
+  childNode.addEventListener('click', showLeaderBoard);
 }
-
+async function showLeaderBoard(e){
+   const token = localStorage.getItem('token');
+   const res = await axios.get("http://localhost:3000/premium/showLeaderBoard", 
+   {headers : { Authorization: token}});
+   res.data.forEach((data)=>{
+    const parentNode = document.getElementById('leaderboard');
+    const childNode = document.createElement('li');
+    let del = document.createElement('button');
+    let edit = document.createElement('button');
+    var textToBePut = `Name - ${data.name} Total Expense - ${data.total_cost}`;
+     childNode.appendChild(document.createTextNode(textToBePut));
+     childNode.appendChild(edit);
+     childNode.appendChild(del);
+     parentNode.appendChild(childNode);
+   })
+}
 
 document.addEventListener("DOMContentLoaded", isPremiumUser);
 async function getAllExpenses(e){
