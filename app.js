@@ -9,6 +9,7 @@ const expenseRouter = require('./routes/expenseRoutes');
 const purchaseMembershipRouter = require("./routes/purchaseMembershipRoutes");
 const premiumRouter = require("./routes/premiumRoutes");
 const resetPasswordRouter = require('./routes/resetPasswordRoutes');
+const reportsRouter = require('./routes/reportsRoutes');
 
 
 
@@ -31,6 +32,7 @@ app.use('/expense', expenseRouter);
 app.use('/purchase', purchaseMembershipRouter);
 app.use('/premium', premiumRouter);
 app.use('/password', resetPasswordRouter);
+app.use('/reports', reportsRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -43,7 +45,7 @@ ResetPassword.belongsTo(User);
 
 
 sequelize
-  //.sync({force : true})
+ // .sync({force : true})
  .sync()
   .then((result) => {
     app.listen(3000);
