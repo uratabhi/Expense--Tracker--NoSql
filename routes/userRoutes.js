@@ -7,9 +7,6 @@ router.get('/', userController.getLoginPage);
 
 router.get('/isPremiumUser', userAuthentication, userController.isPremiumUser);
 
-router.get('/forgotPasswordPage', userController.getforgotPasswordPage);
-
-router.post('/sendMail', userController.sendMail);
 
 router.post('/signUp', userController.postUserSignUP);
 

@@ -8,9 +8,16 @@ const sequelize = require('./utils/database');
 const expenseRouter = require('./routes/expenseRoutes');
 const purchaseMembershipRouter = require("./routes/purchaseMembershipRoutes");
 const premiumRouter = require("./routes/premiumRoutes");
+const resetPasswordRouter = require('./routes/resetPasswordRoutes');
+
+
+
+
+
 const Expense = require('./models/expenseModel');
 const User = require('./models/userModel');
 const Order = require('./models/orderModel');
+const ResetPassword = require('./models/resetPasswordModel');
 
 
 app.use(express.static("public"));
@@ -23,6 +30,7 @@ app.use('/user', userRouter);
 app.use('/expense', expenseRouter);
 app.use('/purchase', purchaseMembershipRouter);
 app.use('/premium', premiumRouter);
+app.use('/password', resetPasswordRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -30,10 +38,13 @@ Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 
+User.hasMany(ResetPassword);
+ResetPassword.belongsTo(User);
+
 
 sequelize
   //.sync({force : true})
-  .sync()
+ .sync()
   .then((result) => {
     app.listen(3000);
   })

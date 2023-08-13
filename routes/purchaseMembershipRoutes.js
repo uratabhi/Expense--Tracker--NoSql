@@ -1,6 +1,6 @@
 const express = require("express");
 
-const purchaseMembershipController = require("../controllers/purchaseMembershipController");
+const purchaseMembershipController = require("../controllers/purchaseMembershipControl");
 
 const Authentication = require("../middleware/auth");
 
