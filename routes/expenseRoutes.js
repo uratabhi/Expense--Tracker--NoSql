@@ -8,6 +8,7 @@ router.get('/', expenseController.getMainPage);
 router.get("/getAllExpenses",   userAuthentication, expenseController.getAllExpenses);
 router.get("/deleteExpense/:id", userAuthentication,expenseController.deleteExpense);
 router.post("/editExpense/:id", userAuthentication,expenseController.editExpense);
+router.get('/download', userAuthentication, expenseController.downloadExpenses);
 router.post("/addExpense", userAuthentication,expenseController.addExpense);
 
 

@@ -19,6 +19,7 @@ const Expense = require('./models/expenseModel');
 const User = require('./models/userModel');
 const Order = require('./models/orderModel');
 const ResetPassword = require('./models/resetPasswordModel');
+const filedownload = require('./models/fileDownloadModel');
 
 
 app.use(express.static("public"));
@@ -42,6 +43,9 @@ Order.belongsTo(User);
 
 User.hasMany(ResetPassword);
 ResetPassword.belongsTo(User);
+
+User.hasMany(filedownload);
+filedownload.belongsTo(User);
 
 
 sequelize

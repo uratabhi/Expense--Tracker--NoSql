@@ -3,6 +3,31 @@ const path = require("path");
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
 const sequelize = require("../utils/database");
+const s3service = require("../services/services");
+const fileDownload = require('../models/fileDownloadModel');
+require("dotenv").config();
+
+const downloadExpenses = async (req, res, next) => {
+  const t = await sequelize.transaction();
+  try {
+    const expenses = await Expense.findAll({ where: { userId: req.user.id } });
+    console.log(expenses);
+    const stringifiedExpenses = JSON.stringify(expenses);
+    const userid = req.user.id;
+    const fileName = `Expense${userid}/${new Date()}.txt`;
+    const fileUrl = await s3service.uploadToS3(stringifiedExpenses, fileName);
+    await fileDownload.create(
+      { fileurl: fileUrl, userId: req.user.id },
+      { transaction: t }
+    );
+    await t.commit();
+    res.status(200).send({ fileUrl, success: true });
+  } catch (err) {
+    t.rollback();
+    console.log(err);
+    res.status(500).send({ fileUrl: "", success: false, error: err });
+  }
+};
 
 const getMainPage = async (req, res, next) => {
   try {
@@ -31,9 +56,9 @@ const addExpense = async (req, res, next) => {
       {
         totalExpenses: Number(req.user.totalExpenses) + Number(amount),
       },
-      { where: { id: req.user.id }, transaction :t},
-    )
-    res.status(200).redirect('/expense');
+      { where: { id: req.user.id }, transaction: t }
+    );
+    res.status(200).redirect("/expense");
     await t.commit();
   } catch (error) {
     await t.rollback();
@@ -100,11 +125,11 @@ const editExpense = async (req, res, next) => {
   );
   res.redirect("/expense");
 };
-
 module.exports = {
   getMainPage,
   addExpense,
   getAllExpenses,
   deleteExpense,
   editExpense,
+  downloadExpenses,
 };

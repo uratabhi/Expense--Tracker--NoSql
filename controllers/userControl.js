@@ -5,6 +5,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+
+
+
+
+
+
+
+
 const generateAccessToken = (id, Email) => {
   return jwt.sign({ userId: id, Email: Email }, "somesecretkey");
 };
@@ -96,6 +104,7 @@ const postUserLogin = async (req, res, next) => {
     console.log(error);
   }
 };
+
 
 module.exports = {
   getLoginPage,

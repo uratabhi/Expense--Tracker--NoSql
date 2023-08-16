@@ -4,5 +4,6 @@ const premiumController = require('../controllers/premiumControl');
 const router = express.Router();
 
 router.get('/showLeaderBoard', userAuthentication, premiumController.getLeaderBoard);
+router.get('/showfiledownloaded', userAuthentication, premiumController.showfiledownloaded);
 
 module.exports = router;

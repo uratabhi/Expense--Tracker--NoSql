@@ -1,8 +1,34 @@
+
 var users = document.getElementById('users');
 var form = document.getElementById('my-form');
 var rzpybtn = document.getElementById('rzpy-btn');
 var btn = document.querySelector('.btn');
+var downloadBtn = document.getElementById('reports');
+var show = document.getElementById('show');
 form.addEventListener('submit', addExpense);
+
+
+
+
+// download button stuffs 
+downloadBtn.addEventListener('click', downloadFiles);
+
+
+async function downloadFiles(e){
+  const token = localStorage.getItem('token');
+  const res = await axios.get("http://localhost:3000/expense/download", {
+    headers: { Authorization: token },
+  });
+  if(res.status===200){
+    var a = document.createElement('a');
+    a.href = res.data.fileUrl;
+    a.download = 'myexpense.csv';
+    a.click();
+  }
+  else{
+     console.log('errror has occuered from the backend server');
+  }
+}
 
 async function addExpense(e){
      e.preventDefault();
@@ -22,6 +48,30 @@ async function addExpense(e){
      } catch (error) {
         console.log(error);
      }
+}
+
+show.addEventListener('click', showfiledownloaded);
+
+async function showfiledownloaded(e){
+       e.preventDefault();
+       try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get("http://localhost:3000/premium/showfiledownloaded", {
+          headers: { Authorization: token },
+        });
+        var ptr = 1;
+    
+        res.data.data.forEach((data)=>{
+          const parentNode = document.getElementById('downloads');
+          const childNode = document.createElement('li');
+          var text = `(${ptr++}) fileurl - ${data.fileurl} - createdAt ${data.createdAt}`
+          childNode.appendChild(document.createTextNode(text));
+          parentNode.appendChild(childNode);
+        })
+        
+       } catch (error) {
+         console.log(error);
+       }
 }
 
 
