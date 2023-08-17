@@ -1,4 +1,8 @@
 const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 
 
@@ -25,6 +29,16 @@ const filedownload = require('./models/fileDownloadModel');
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+}
+));
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+app.use(morgan('combined', {stream: accessLogStream}));
 
 
 app.use("/", userRouter);
