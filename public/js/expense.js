@@ -5,6 +5,16 @@ var rzpybtn = document.getElementById('rzpy-btn');
 var btn = document.querySelector('.btn');
 var downloadBtn = document.getElementById('reports');
 var show = document.getElementById('show');
+
+
+
+
+
+
+
+
+
+
 form.addEventListener('submit', addExpense);
 
 
@@ -143,9 +153,9 @@ document.addEventListener("DOMContentLoaded", isPremiumUser);
 async function getAllExpenses(e){
     try {
         const token = localStorage.getItem('token');
-        const res = await axios.get("http://localhost:3000/expense/getAllExpenses",
+        const res = await axios.get("http://localhost:3000/expense/getAllExpenses/1",
         {headers : {Authorization : token}});
-        res.data.forEach((data)=>{
+        res.data.expenses.forEach((data)=>{
             const parentNode = document.getElementById('users');
             const childNode = document.createElement('li');
             childNode.setAttribute("id", data.id);
@@ -161,10 +171,51 @@ async function getAllExpenses(e){
              childNode.appendChild(del);
              parentNode.appendChild(childNode);
         })
+        const ul = document.getElementById('pagination');
+        for (let i = 1; i <= res.data.totalPages; i++) {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.setAttribute("href", "#");
+          a.appendChild(document.createTextNode(i));
+          li.appendChild(a);
+          ul.appendChild(li);
+          a.addEventListener("click", paginationBtn);
+        }
     } catch (err) {
         console.log(err);
     }
 }
+
+async function paginationBtn(e){
+   try {
+      const PageNo = e.target.textContent;
+      const token = localStorage.getItem('token');
+      const res = await axios.get(`http://localhost:3000/expense/getAllExpenses/${PageNo}`,
+      {headers : {Authorization : token}});
+      users.innerHTML = "";
+      res.data.expenses.forEach((data)=>{
+        const parentNode = document.getElementById('users');
+        const childNode = document.createElement('li');
+        childNode.setAttribute("id", data.id);
+        let del = document.createElement('button');
+        let edit = document.createElement('button');
+        del.className = 'delete';
+        edit.className = 'edit';
+        del.appendChild(document.createTextNode('delete'));
+        edit.appendChild(document.createTextNode('edit'));
+        var textToBePut = `${data.amount} - ${data.description} - ${data.category}`;
+         childNode.appendChild(document.createTextNode(textToBePut));
+         childNode.appendChild(edit);
+         childNode.appendChild(del);
+         parentNode.appendChild(childNode);
+    })
+   } catch (error) {
+     console.log(error);
+   }
+}
+
+
+
 users.addEventListener("click", deleteExpense);
 async function deleteExpense(e){
      try {
