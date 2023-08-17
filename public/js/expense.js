@@ -1,10 +1,16 @@
 
+
 var users = document.getElementById('users');
 var form = document.getElementById('my-form');
 var rzpybtn = document.getElementById('rzpy-btn');
 var btn = document.querySelector('.btn');
 var downloadBtn = document.getElementById('reports');
 var show = document.getElementById('show');
+var dp = document.getElementById('dynamicpagination');
+dp.addEventListener('click', ()=>{
+  const dpvalue = dp.value;
+  localStorage.setItem('dynamicpagination', dpvalue);
+})
 
 
 
@@ -153,7 +159,9 @@ document.addEventListener("DOMContentLoaded", isPremiumUser);
 async function getAllExpenses(e){
     try {
         const token = localStorage.getItem('token');
-        const res = await axios.get("http://localhost:3000/expense/getAllExpenses/1",
+        const pagelimit = localStorage.getItem('dynamicpagination');
+        console.log(pagelimit); 
+        const res = await axios.get(`http://localhost:3000/expense/getAllExpenses/1/${pagelimit}`,
         {headers : {Authorization : token}});
         res.data.expenses.forEach((data)=>{
             const parentNode = document.getElementById('users');
@@ -190,7 +198,8 @@ async function paginationBtn(e){
    try {
       const PageNo = e.target.textContent;
       const token = localStorage.getItem('token');
-      const res = await axios.get(`http://localhost:3000/expense/getAllExpenses/${PageNo}`,
+      const pagelimit = localStorage.getItem('dynamicpagination');
+      const res = await axios.get(`http://localhost:3000/expense/getAllExpenses/${PageNo}/${pagelimit}`,
       {headers : {Authorization : token}});
       users.innerHTML = "";
       res.data.expenses.forEach((data)=>{
