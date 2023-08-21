@@ -3,7 +3,9 @@ const sequelize = require('../utils/database');
 const Expense = require("../models/expenseModel");
 const fileDownload = require("../models/fileDownloadModel");
 
-const getLeaderBoard = async (rea, res, next) =>{
+
+
+const getLeaderBoard = async (req, res, next) =>{
      try {
         const leaderboarsofusers = await  User.findAll({
          order: [['totalExpenses', "DESC"]],
@@ -30,4 +32,4 @@ const showfiledownloaded = async (req, res, next) => {
       res.status(500).json({ success: false });
     }
   };
-module.exports = {getLeaderBoard, showfiledownloaded};
+module.exports = {getLeaderBoard, showfiledownloaded, };

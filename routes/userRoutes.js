@@ -7,6 +7,8 @@ router.get('/', userController.getLoginPage);
 
 router.get('/isPremiumUser', userAuthentication, userController.isPremiumUser);
 
+router.get('/logout', userAuthentication, userController.logout);
+
 
 
 router.post('/signUp', userController.postUserSignUP);

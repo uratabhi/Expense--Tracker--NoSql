@@ -44,8 +44,11 @@ const postUserSignUP = async (req, res, next) => {
     if (user) {
       res
         .status(403)
-        .send(
-          `<script>alert('This email is already taken. Please choose another one.'); window.location.href='/'</script>`
+        .json(
+            {
+              success: false,
+              message: "This email is already taken. Please choose another one.",
+            }
         );
     } else {
       const saltRounds = 10;
@@ -56,11 +59,12 @@ const postUserSignUP = async (req, res, next) => {
           Password: hash,
         });
       });
-      res
+     return res
         .status(200)
-        .send(
-          `<script>alert('User Created Successfully!'); window.location.href='/'</script>`
-        );
+        .json({
+           success: true,
+           message: "User Created Successfully!",
+        });
     }
   } catch (error) {
     console.log(error);
@@ -105,6 +109,13 @@ const postUserLogin = async (req, res, next) => {
   }
 };
 
+const logout =  async (req, res, next)=>{
+    try {
+      res.redirect('/');
+    } catch (error) {
+      res.status(500).send('Error logging out');
+    }
+}
 
 module.exports = {
   getLoginPage,
@@ -112,4 +123,5 @@ module.exports = {
   postUserSignUP,
   isPremiumUser,
   generateAccessToken,
+  logout
 };

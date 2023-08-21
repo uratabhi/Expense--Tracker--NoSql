@@ -1,131 +1,56 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.6;
+  font-family: Arial, sans-serif;
+  margin: 0;
 }
 
-ul {
-  list-style: none;
-}
-
-ul li {
-  padding: 10px;
-  background: #f0ebeb;
-  margin: 5px 0;
-}
-
-header {
-  background: #f4f4f4;
-  padding: 1rem;
+h1, h2 {
   text-align: center;
 }
 
-.container {
-  margin: auto;
-  width: 500px;
-  overflow: auto;
-  padding: 3rem 2rem;
+.input-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 40px 10px 10px 10px
 }
 
-#my-form {
-  padding: 2rem;
-  background: #f4f4f4;
+#rzpy-btn{
+  margin-right: 5px;
 }
 
-#my-form label {
-  display: block;
-}
-
-#my-form input[type='number']{
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-#my-form input[type='text'] {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+.input-section label {
+  font-weight: bold;
+  margin-right: 10px;
 }
 .main-selection{
-  width: 100%;
+  width: 50%;
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
 }
-.btn {
-  display: block;
-  width: 100%;
-  padding: 10px 15px;
-  border: 0;
-  background: #333;
-  color: #fff;
+ input[type='number']{
+  width: 50%;
+  padding: 8px;
+  margin-bottom: 10px;
   border-radius: 5px;
-  margin: 5px 0;
+  border: 1px solid #ccc;
 }
-#rzpy-btn{
-  display: block;
-  width: 100%;
-  padding: 10px 15px;
-  border: 0;
-  background: #b24646;
-  color: #ffff;
+ input[type='text'] {
+  width: 50%;
+  padding: 8px;
+  margin-bottom: 10px;
   border-radius: 5px;
-  margin: 5px 0;
+  border: 1px solid #ccc;
+}
+.expenses-list {
+  margin: 20px;
+  color: rgb(25, 25, 47);
 }
 
-#rzpy-btn:hover{
-  background : #df4840
-}
-
-.btn:hover {
-  background: #444;
-}
-
-.bg-dark {
-  background: #333;
-  color: #fff;
-}
-
-.error {
-  background: orangered;
-  color: #fff;
-  padding: 5px;
-  margin: 5px;
-}
-.delete{
-    display: block;
-    float: right;
-    width: 10%;
-    padding: 5px 5px;
-    border: 0;
-    background: #e40606;
-    color: #fff;
-    border-radius: 5px;
-}
 .edit{
-    display: block;
-    float: right;
-    width: 10%;
-    padding: 5px 5px;
-    border: 0;
-    background: #21aa1c;
-    color: #fff;
-    border-radius: 5px;
-    margin: 0 1px;
+   margin-right: 5px;
 }
- .edit:hover{
-  background-color: #28ec22;
- }
- .delete:hover{
-    background-color: orangered;
- }
+
