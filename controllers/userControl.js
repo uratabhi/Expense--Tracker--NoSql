@@ -1,6 +1,5 @@
 const path = require("path");
 const User = require("../models/userModel");
-const Sequelize = require("sequelize");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -13,8 +12,8 @@ require("dotenv").config();
 
 
 
-const generateAccessToken = (id, Email) => {
-  return jwt.sign({ userId: id, Email: Email }, "somesecretkey");
+const generateAccessToken = (_id, email) => {
+  return jwt.sign({ userId: _id, email: email }, process.env.TOKEN);
 };
 
 
@@ -37,10 +36,10 @@ const getLoginPage = async (req, res, next) => {
 
 const postUserSignUP = async (req, res, next) => {
   try {
-    const Name = req.body.userName;
-    const Email = req.body.userEmail;
-    const Password = req.body.userPass;
-    const user = await User.findOne({ where: { Email: Email } });
+    const name = req.body.userName;
+    const email = req.body.userEmail;
+    const password = req.body.userPass;
+    const user = await User.findOne( { email: email } ).exec();
     if (user) {
       res
         .status(403)
@@ -52,12 +51,13 @@ const postUserSignUP = async (req, res, next) => {
         );
     } else {
       const saltRounds = 10;
-      bcrypt.hash(Password, saltRounds, async (err, hash) => {
-        await User.create({
-          Name,
-          Email,
-          Password: hash,
-        });
+      bcrypt.hash(password, saltRounds, async (err, hash) => {
+         const newUser = new User({
+            name : name,
+            email: email,
+            password: hash,
+         });
+         await newUser.save();
       });
      return res
         .status(200)
@@ -73,12 +73,12 @@ const postUserSignUP = async (req, res, next) => {
 
 const postUserLogin = async (req, res, next) => {
   try {
-    const Email = req.body.loginEmail;
-    const Password = req.body.loginPass;
+    const email = req.body.loginEmail;
+    const password = req.body.loginPass;
 
-    const user = User.findOne({ where: { Email: Email } }).then((user) => {
+     const user = await User.findOne( { email: email } ).exec();
       if (user) {
-        bcrypt.compare(Password, user.Password, (err, result) => {
+        bcrypt.compare(password, user.password, (err, result) => {
           if (err) {
             return res
               .status(500)
@@ -88,7 +88,7 @@ const postUserLogin = async (req, res, next) => {
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
-              token: generateAccessToken(user.id, user.email),
+              token: generateAccessToken(user._id, user.email),
             });
           } else {
             return res.status(401).json({
@@ -103,9 +103,12 @@ const postUserLogin = async (req, res, next) => {
           message: "User doesn't Exists!",
         });
       }
-    });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Hey Abhishekk! Something went wrong",
+    });
   }
 };
 

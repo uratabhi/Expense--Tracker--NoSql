@@ -18,7 +18,7 @@ async function showLeaderBoard(e) {
     td1.appendChild(document.createTextNode(position++));
 
     let td2 = document.createElement("td");
-    td2.appendChild(document.createTextNode(data.Name));
+    td2.appendChild(document.createTextNode(data.name));
 
     let td3 = document.createElement("td");
     td3.appendChild(document.createTextNode(data.totalExpenses));

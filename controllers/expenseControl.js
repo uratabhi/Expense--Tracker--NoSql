@@ -1,33 +1,43 @@
 const path = require("path");
+const mongoose = require("mongoose");
 
 const Expense = require("../models/expenseModel");
 const User = require("../models/userModel");
-const sequelize = require("../utils/database");
 const s3service = require("../services/services");
-const fileDownload = require('../models/fileDownloadModel');
+const FileDownload = require('../models/fileDownloadModel');
 require("dotenv").config();
 
 const downloadExpenses = async (req, res, next) => {
-  const t = await sequelize.transaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    const expenses = await Expense.findAll({ where: { userId: req.user.id } });
-    console.log(expenses);
+    const expenses = await Expense.find({ userId: req.user.id });
+    console.log('expensessssssssss' + expenses);
+
     const stringifiedExpenses = JSON.stringify(expenses);
-    const userid = req.user.id;
-    const fileName = `Expense${userid}/${new Date()}.txt`;
+    const userId = req.user.id;
+    const fileName = `Expense${userId}/${new Date()}.txt`;
     const fileUrl = await s3service.uploadToS3(stringifiedExpenses, fileName);
-    await fileDownload.create(
-      { fileurl: fileUrl, userId: req.user.id },
-      { transaction: t }
+
+    // Create a record in MongoDB using FileDownload model
+    await FileDownload.create(
+      [{userId: userId, fileurl: fileUrl }], // Provide userId and fileurl
+      { session }
     );
-    await t.commit();
+
+    await session.commitTransaction();
+    session.endSession();
+
     res.status(200).send({ fileUrl, success: true });
   } catch (err) {
-    t.rollback();
-    console.log(err);
-    res.status(500).send({ fileUrl: "", success: false, error: err });
+    await session.abortTransaction();
+    console.error(err);
+    res.status(500).send({ fileUrl: '', success: false, error: err });
   }
 };
+
+
 
 const getMainPage = async (req, res, next) => {
   try {
@@ -38,30 +48,32 @@ const getMainPage = async (req, res, next) => {
 };
 
 const addExpense = async (req, res, next) => {
-  const t = await sequelize.transaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const amount = req.body.amount;
     const description = req.body.description;
     const category = req.body.category;
-    await Expense.create(
+    const expense  = new Expense({
+       description: description,
+       amount: amount,
+       category: category,
+       userId : req.user
+    })
+    await expense.save({ session });
+    await User.updateOne(
+      { _id: req.user},
       {
-        description: description,
-        amount: amount,
-        category: category,
-        userId: req.user.id,
+        $inc: { totalExpenses: Number(amount) },
       },
-      { transaction: t }
+      { session }
     );
-    await User.update(
-      {
-        totalExpenses: Number(req.user.totalExpenses) + Number(amount),
-      },
-      { where: { id: req.user.id }, transaction: t }
-    );
+    await session.commitTransaction();
+    session.endSession();
     res.status(200).redirect("/expense");
-    await t.commit();
   } catch (error) {
-    await t.rollback();
+    await session.abortTransaction();
+    session.endSession()
     console.log(error);
     res.status(500).send("Some error has occurred while adding expense");
   }
@@ -69,7 +81,7 @@ const addExpense = async (req, res, next) => {
 
 const getAllExpenses = async (req, res, next) => {
   try {
-    const expenses = await Expense.findAll({ where: { userId: req.user.id } });
+    const expenses = await Expense.find({ userId: req.user.id } );
     res.json(expenses);
   } catch (err) {
     console.log(err);
@@ -82,15 +94,13 @@ const getAllExpensesforPagination = async (req, res, next) => {
     const limit =  Number(req.params.limit);
     console.log(pageNo, limit);
     const offset = (pageNo - 1) * limit;
-    const totalExpenses = await Expense.count({
-      where: { userId: req.user.id },
-    });
+    const totalExpenses = await Expense.countDocuments( { userId: req.user.id });
+    console.log(`totalExpenses: ${totalExpenses}`);
     const totalPages = Math.ceil(totalExpenses / limit);
-    const expenses = await Expense.findAll({
-      where: { userId: req.user.id },
-      offset: offset,
-      limit: limit,
-    });
+    console.log(`totalPages is ${totalPages}`);
+    const expenses = await Expense.find({ userId: req.user.id })
+    .skip(offset)
+    .limit(limit);
     res.json({ expenses: expenses, totalPages: totalPages });
   } catch (err) {
     console.log(err);
@@ -101,15 +111,11 @@ const deleteExpense = async (req, res, next) => {
   const id = req.params.id;
   try {
     console.log(id, req.user.id);
-    const expense = await Expense.findByPk(id);
-    console.log(expense);
-    await User.update(
-      {
-        totalExpenses: req.user.totalExpenses - expense.amount,
-      },
-      { where: { id: req.user.id } }
-    );
-    await expense.destroy();
+    const expense = await Expense.findOne({_id : id, userId : req.user})
+    const user = await User.findById(req.user.id);
+    user.totalExpenses -= expense.amount;
+    await user.save();
+    await Expense.deleteOne({_id : id , userId : req.user});
     console.log("expense Deleted");
     res.redirect("/expense");
   } catch (error) {
@@ -123,27 +129,20 @@ const editExpense = async (req, res, next) => {
   const description = req.body.description;
   const amount = req.body.amount;
   console.log(id, category, description, amount);
-  const expense = await Expense.findByPk(id);
+  const expense = await Expense.findOne({_id : id, userId : req.user});
+  const user = await User.findById(req.user.id);
+  user.totalExpenses = user.totalExpenses - expense.amount + Number(amount);
+    
+  await user.save();
 
-  await User.update(
-    {
-      totalExpenses: req.user.totalExpenses - expense.amount + Number(amount),
-    },
-    { where: { id: req.user.id } }
-  );
-  await Expense.update(
-    {
-      category,
-      description,
-      amount,
-    },
-    {
-      where: {
-        id: id,
-        userId: req.user.id,
-      },
-    }
-  );
+  await Expense.updateOne(
+     { _id : id, userId : req.user.id},
+     {
+       category : category, 
+       description : description,
+       amount : amount,
+     }
+  )
   res.redirect("/expense");
 };
 module.exports = {

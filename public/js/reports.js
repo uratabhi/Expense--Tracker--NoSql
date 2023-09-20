@@ -26,14 +26,14 @@ async function showfiledownloaded(e) {
         td1.appendChild(document.createTextNode(ptr++));
     
         let td2 = document.createElement("td");
-        td2.appendChild(document.createTextNode(data.fileurl));
+        let a = document.createElement("a");
+        a.setAttribute("href", data.fileurl);
+        a.appendChild(document.createTextNode('click here to download file'));
+        td2.appendChild(a);
     
-        let td3 = document.createElement("td");
-        td3.appendChild(document.createTextNode(data.createdAt));
     
          tr.appendChild(td1);
          tr.appendChild(td2);
-         tr.appendChild(td3);
     });
   } catch (error) {
     console.log(error);

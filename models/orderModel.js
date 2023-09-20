@@ -1,4 +1,33 @@
-const Sequelize = require("sequelize");
+const mongoose = require('mongoose') 
+
+
+const Schema = mongoose.Schema;
+
+
+const OrderSchema  = new Schema({
+    paymentId : {
+       type : String, 
+    },
+    orderId : {
+      type : String, 
+      requried : true,
+    },
+    status : {
+      type : String, 
+      required : true,
+    },
+    userId : {
+       type : Schema.Types.ObjectId, 
+       ref : "User",
+       required : true,
+    }
+});
+
+const Order = mongoose.model('Order', OrderSchema);
+
+module.exports = Order;
+
+/*const Sequelize = require("sequelize");
 const sequelize = require("../utils/database");
 
 
@@ -15,3 +44,4 @@ const Order = sequelize.define("order", {
 });
 
 module.exports = Order;
+*/

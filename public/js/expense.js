@@ -7,6 +7,7 @@ const reportsLink = document.getElementById("reportslink");
 const leaderboardLink = document.getElementById("leaderboardlink");
 const logoutBtn = document.getElementById("logoutbtn");
 const dp = document.getElementById('dynamicpagination');
+var isdone = false;
 
 
 logoutBtn.addEventListener('click', async (e) => {
@@ -24,10 +25,10 @@ logoutBtn.addEventListener('click', async (e) => {
 
 
 dp.addEventListener('click', ()=>{
-  const dpvalue = dp.value;
-  localStorage.setItem('dynamicPagination', dpvalue);
-  window.location.reload();
+   const dpvalue = dp.value;
+   localStorage.setItem('dynamicPagination', dpvalue);
 })
+dp.value = localStorage.getItem('dynamicPagination');
 
 
 async function downloadFiles(e){
@@ -160,7 +161,7 @@ async function getAllExpenses(e) {
     );
     res.data.expenses.forEach((data) => {
 
-      const id = data.id;
+      const id = data._id;
       let tr = document.createElement("tr");
       table.appendChild(tr);
 
@@ -284,13 +285,14 @@ async function editExpense(e) {
       const description = document.getElementById("description");
       const category = document.getElementById("category");
       const addBtn = document.querySelector("#add-btn");
-      // console.log(id);
+       console.log(id);
       const res = await axios.get(
         `http://localhost:3000/expense/getAllExpenses`,
         { headers: { Authorization: token } }
       );
+
       res.data.forEach((data) => {
-        if (data.id == id) {
+        if (data._id == id) {
           amount.value = data.amount;
           description.value = data.description;
           category.value = data.category;

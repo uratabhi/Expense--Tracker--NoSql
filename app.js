@@ -6,6 +6,7 @@ const path = require('path');
 const app = express();
 
 
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/userRoutes');
 const sequelize = require('./utils/database');
@@ -49,23 +50,33 @@ app.use('/premium', premiumRouter);
 app.use('/password', resetPasswordRouter);
 app.use('/reports', reportsRouter);
 
-User.hasMany(Expense);
-Expense.belongsTo(User);
+// User.hasMany(Expense);
+// Expense.belongsTo(User);
 
-User.hasMany(Order);
-Order.belongsTo(User);
+// User.hasMany(Order);
+// Order.belongsTo(User);
 
-User.hasMany(ResetPassword);
-ResetPassword.belongsTo(User);
+// User.hasMany(ResetPassword);
+// ResetPassword.belongsTo(User);
 
-User.hasMany(filedownload);
-filedownload.belongsTo(User);
+// User.hasMany(filedownload);
+// filedownload.belongsTo(User);
 
 
-sequelize
- //.sync({force : true})
- .sync()
-  .then((result) => {
-    app.listen(3000);
-  })
-  .catch((err) => console.log(err));
+// sequelize
+//  //.sync({force : true})
+//  .sync()
+//   .then((result) => {
+//     app.listen(3000 || process.env.PORT);
+//   })
+//   .catch((err) => console.log(err));
+
+mongoose
+     .connect(process.env.MONGODB)
+     .then((result)=>{
+       console.log("Connected");
+       app.listen(3000);
+     })
+     .catch((err)=>{
+       console.log(err);
+     });
